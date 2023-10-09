@@ -1,42 +1,45 @@
-#For more information on socket module go here: https://realpython.com/python-sockets/
+# Pseudo code for a simple port scanner
 import socket
 from colorama import Fore
-#colors as global variables
+
+# Define colors as global variables
 GREEN = Fore.GREEN
 GRAY = Fore.LIGHTBLACK_EX
 RESET = Fore.RESET
 
+# Function to perform port scanning
 def portScanner(host, port):
-    #creates an object of class socket
+    # Create a socket object
     sock = socket.socket()
-    try: 
-        sock.connect((host,port))
-        sock.settimeout(.2)
-    #if connection fails
-    except: 
-        return False
-    #If it succeeds 
-    else: 
-        return True
     
-#Determine the host
+    try:
+        # Attempt to connect to the host and port
+        sock.connect((host, port))
+        sock.settimeout(0.2)
+    except:
+        # If the connection fails, the port is closed
+        return False
+    else:
+        # If the connection succeeds, the port is open
+        return True
+
+# Function to scan ports on a given host
 def runner():
-    #Use your localhost IP: 127.0.0.1 
     host = input("Please enter the host to scan: ")
+    
     for port in range(1, 1000):
-        
-        if (portScanner(host, port)):
-            print(f"{GREEN}[+]The port {port} was open on {host}! {RESET}")
+        if portScanner(host, port):
+            print(f"{GREEN}[+] The port {port} is open on {host}! {RESET}")
         else:
-            print(f"{GRAY}[-]Port is closed!{RESET}", end="\r")
+            print(f"{GRAY}[-] Port {port} is closed! {RESET}", end="\r")
 
 if __name__ == "__main__":
     runner()
 
-#we can open ports to test our script on your local host, open the terminal and use the following commands: 
-#sudo nc -lvnp 80 & 
-#sudo nc -lvnp 99 & ..and so on
+# You can open ports for testing the script using commands like:
+# sudo nc -lvnp 80 &
+# sudo nc -lvnp 99 &
+# ...and so on
 
-#verify how many ports you have open by using the following command:
-#sudo netstat -ntlpa | grep -i listen 
-
+# To verify how many ports you have open, use the following command:
+# sudo netstat -ntlpa | grep -i listen
